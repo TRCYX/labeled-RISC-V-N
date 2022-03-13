@@ -11,7 +11,7 @@ object OMModes {
   def getModes(useVM: Boolean): Seq[OMPrivilegeMode] = {
     useVM match {
       case false => Seq(OMMachineMode)
-      case true => Seq(OMMachineMode, OMSupervisorMode)
+      case true => Seq(OMMachineMode, OMSupervisorMode, OMUserMode)
     }
   }
 }
