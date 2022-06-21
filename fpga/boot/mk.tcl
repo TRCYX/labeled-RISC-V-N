@@ -21,7 +21,7 @@ if {$brd == "ultraZ"} {
   set device_tree_repo_path "/home/yzh/xilinx/device-tree-xlnx"
 }
 
-set hw_design [open_hw_design ${hdf_file}]
+set hw_design [hsi::open_hw_design ${hdf_file}]
 
 switch -regexp -- $brd {
   zedboard {
@@ -34,7 +34,7 @@ switch -regexp -- $brd {
     set brd_version zcu102-rev1.0
     set arch zynqmp
 
-    generate_app -hw $hw_design -os standalone -proc psu_pmu_0 -app zynqmp_pmufw -compile -sw pmufw -dir ${build_dir}/pmufw
+    hsi::generate_app -hw $hw_design -os standalone -proc psu_pmu_0 -app zynqmp_pmufw -compile -sw pmufw -dir ${build_dir}/pmufw
     exec mkdir -p ${script_dir}/build/${arch}
     exec ln -sf ${build_dir}/pmufw/executable.elf ${script_dir}/build/${arch}/pmufw.elf
   }
@@ -44,7 +44,7 @@ switch -regexp -- $brd {
   }
 }
 
-generate_app -hw $hw_design -os standalone -proc $processor -app ${arch}_fsbl -sw fsbl -dir ${build_dir}/fsbl
+hsi::generate_app -hw $hw_design -os standalone -proc $processor -app ${arch}_fsbl -sw fsbl -dir ${build_dir}/fsbl
 if {$brd == "sidewinder"} {
   # see bug-list.md
   exec sed -i -e "s/0x03FFFFFFU, 0x02000FFFU);/0x03FFFFFFU, 0x03FFFFFFU);/g" ${build_dir}/fsbl/psu_init.c
@@ -56,11 +56,11 @@ exec ln -sf ${build_dir}/fsbl/executable.elf ${script_dir}/build/${arch}/fsbl.el
 exec bootgen -arch ${arch} -image ${script_dir}/bootgen-${arch}.bif -w -o i ${build_dir}/BOOT.BIN
 
 #device tree
-set_repo_path ${device_tree_repo_path}
-create_sw_design device-tree -os device_tree -proc $processor
+hsi::set_repo_path ${device_tree_repo_path}
+hsi::create_sw_design device-tree -os device_tree -proc $processor
 if {$brd != "ultraZ"} {
-  set_property CONFIG.periph_type_overrides "{BOARD ${brd_version}}" [get_os]
+  common::set_property CONFIG.periph_type_overrides "{BOARD ${brd_version}}" [hsi::get_os]
 }
-generate_target -dir ${build_dir}/dts
+hsi::generate_target -dir ${build_dir}/dts
 
 exit
