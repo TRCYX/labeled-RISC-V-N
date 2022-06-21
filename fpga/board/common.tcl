@@ -27,7 +27,9 @@ set data_dir    ${script_dir}/data
 set ip_dir      ${script_dir}/ip
 
 create_project $project_name -force -dir $project_dir/ -part ${device}
-set_property board_part $board [current_project]
+if {[info exists board]} {
+  set_property board_part $board [current_project]
+}
 
 # lib files
 set inc_files [list \

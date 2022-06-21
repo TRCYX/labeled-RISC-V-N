@@ -165,6 +165,20 @@ class LvNAFPGAConfigsidewinder extends Config(
   ++ new WithDebugSBA
   ++ new BaseFPGAConfig)
 
+class LvNAFPGAConfigaxu15eg extends Config(
+  new WithoutFPU
+  ++ new WithNonblockingL1(8)
+  ++ new WithNL2CacheCapacity(2048)
+  ++ new WithNExtTopInterrupts(7)
+  ++ new WithNBigCores(4)
+  ++ new WithRationalRocketTiles
+  ++ new WithTimebase(BigInt(10000000)) // 10 MHz
+  ++ new WithExtMemSize(0x80000000L)  // 2GB
+  ++ new WithJtagDTM
+  ++ new WithDebugSBA
+  ++ new WithUINTCMat
+  ++ new BaseFPGAConfig)
+
 class LvNAFPGAConfigrv32 extends Config(
   new WithoutFPU
   //++ new WithNonblockingL1(8)
